@@ -5,3 +5,4 @@
 - [ ] create remove song from queue command
 - [ ] fix resume command
 - [ ] create now playing command
+- [x] refactor embedMessages function

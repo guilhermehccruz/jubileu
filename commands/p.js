@@ -74,7 +74,7 @@ async function addToQueue(servers, url, title, channel, channelTitle) {
 			`Adicionado a fila - Posição ${
 				parseInt(servers.server.queue.length) + 1
 			}`,
-			`${title}\n\n${channelTitle}\n\n${url}`,
+			[title, channelTitle, url],
 		);
 	}
 
@@ -95,13 +95,11 @@ async function playMusic(servers, channel) {
 			ytdl(servers.server.queue[0].url, ytdlFilters),
 		);
 
-		await embedMessage(
-			channel,
-			'Agora tocando',
-			`${servers.server.queue[0].title}\n\n${decodeURI(
-				servers.server.queue[0].channelTitle,
-			)}\n\n${servers.server.queue[0].url}`,
-		);
+		await embedMessage(channel, 'Agora tocando', [
+			servers.server.queue[0].title,
+			servers.server.queue[0].channelTitle,
+			servers.server.queue[0].url,
+		]);
 
 		servers.server.dispatcher.on('finish', () => {
 			servers.server.queue.shift();
@@ -116,7 +114,15 @@ async function playMusic(servers, channel) {
 	}
 }
 
-async function embedMessage(channel, title, description) {
+async function embedMessage(channel, title, descriptionItems) {
+	let description = '';
+	descriptionItems.forEach((item) => {
+		description += item;
+
+		if (item !== descriptionItems[-1]) {
+			description += '\n\n';
+		}
+	});
 	const embed = new MessageEmbed().setTitle(title).setDescription(description);
 
 	channel.send(embed);
