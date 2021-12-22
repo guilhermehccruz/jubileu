@@ -1,0 +1,32 @@
+{
+	"name": "musicbot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/guilhermehccruz/jubileu.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/guilhermehccruz/jubileu/issues"
+	},
+	"homepage": "https://github.com/guilhermehccruz/jubileu#readme",
+	"devDependencies": {
+		"eslint": "^7.32.0",
+		"nodemon": "^2.0.15",
+		"prettier": "^2.5.1",
+		"prettier-eslint": "^13.0.0"
+	},
+	"dependencies": {
+		"discord.js": "^12.5.1",
+		"ffmpeg-static": "^4.3.0",
+		"googleapis": "^92.0.0",
+		"ytdl-core": "^4.9.2"
+	}
+}
