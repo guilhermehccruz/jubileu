@@ -21,9 +21,8 @@ module.exports = {
 				.videoDetails;
 
 			const title = videoDetails.title;
-			const channelTitle = videoDetails.ownerChannelName;
 
-			await addToQueue(servers, args[0], title, message.channel, channelTitle);
+			await addToQueue(servers, args[0], title, message.channel);
 		}
 		else {
 			const youtube = new youtube_v3.Youtube({
@@ -35,7 +34,7 @@ module.exports = {
 				{
 					q: args.join(' '),
 					part: 'snippet',
-					fields: 'items(id(videoId),snippet(title,channelTitle))',
+					fields: 'items(id(videoId))',
 					type: 'video',
 				},
 				async (err, res) => {
@@ -44,19 +43,17 @@ module.exports = {
 					}
 
 					try {
-						const url =
-							'https://www.youtube.com/watch?v=' + res.data.items[0].id.videoId;
+						const id = res.data.items[0].id.videoId;
 
-						const title = res.data.items[0].snippet.title;
-						const channelTitle = res.data.items[0].snippet.channelTitle;
+						const url = 'https://www.youtube.com/watch?v=' + id;
 
-						await addToQueue(
-							servers,
-							url,
-							title,
-							message.channel,
-							channelTitle,
-						);
+						const videoDetails = (
+							await ytdl.getInfo(res.data.items[0].id.videoId)
+						).videoDetails;
+
+						const title = videoDetails.title;
+
+						await addToQueue(servers, url, title, message.channel);
 					}
 					catch (error) {
 						if (error.name === 'Error [VOICE_PLAY_INTERFACE_BAD_TYPE]') return;
@@ -67,21 +64,21 @@ module.exports = {
 	},
 };
 
-async function addToQueue(servers, url, title, channel, channelTitle) {
+async function addToQueue(servers, url, title, channel) {
 	if (servers.server.queue.length > 0) {
 		await embedMessage(
 			channel,
 			`Adicionado a fila - Posição ${
 				parseInt(servers.server.queue.length) + 1
 			}`,
-			[title, channelTitle, url],
+			title,
+			url,
 		);
 	}
 
 	servers.server.queue.push({
 		url: url,
 		title: title,
-		channelTitle: channelTitle,
 	});
 
 	await playMusic(servers, channel);
@@ -95,11 +92,12 @@ async function playMusic(servers, channel) {
 			ytdl(servers.server.queue[0].url, ytdlFilters),
 		);
 
-		await embedMessage(channel, 'Agora tocando', [
+		await embedMessage(
+			channel,
+			'Agora tocando',
 			servers.server.queue[0].title,
-			servers.server.queue[0].channelTitle,
 			servers.server.queue[0].url,
-		]);
+		);
 
 		servers.server.dispatcher.on('finish', () => {
 			servers.server.queue.shift();
@@ -114,16 +112,8 @@ async function playMusic(servers, channel) {
 	}
 }
 
-async function embedMessage(channel, title, descriptionItems) {
-	let description = '';
-	descriptionItems.forEach((item) => {
-		description += item;
-
-		if (item !== descriptionItems[-1]) {
-			description += '\n\n';
-		}
-	});
-	const embed = new MessageEmbed().setTitle(title).setDescription(description);
+async function embedMessage(channel, title, videoTitle, url) {
+	const embed = new MessageEmbed().setTitle(title).addField(videoTitle, url);
 
 	channel.send(embed);
 }
