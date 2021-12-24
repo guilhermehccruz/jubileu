@@ -1,6 +1,8 @@
 module.exports = {
-	name: 'resume',
-	description: 'Voltar a tocar',
+	name: 'pause',
+	description: 'Pausa a música',
+	guildOnly: true,
+	alises: [],
 	async execute(servers, message) {
 		if (
 			typeof message.guild.voice === 'undefined' ||
@@ -11,8 +13,8 @@ module.exports = {
 			return;
 		}
 
-		await servers.server.dispatcher.resume();
+		await servers.server.dispatcher.pause();
 
-		await message.reply('Voltou');
+		await message.reply('Parou');
 	},
 };
