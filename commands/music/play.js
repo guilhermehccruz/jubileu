@@ -6,13 +6,17 @@ const ytdlFilters = {
 	highWaterMark: 1 << 25,
 };
 const { youtube_v3 } = require('googleapis');
-const { google_key } = require('../config.json');
+const { google_key } = require('../../config.json');
 const { MessageEmbed } = require('discord.js');
 const join = require('./join');
 
 module.exports = {
-	name: 'p',
+	name: 'play',
 	description: 'Toca uma pra você',
+	aliases: ['p'],
+	args: true,
+	usage: '<url/nome da música>',
+	guildOnly: true,
 	async execute(servers, message, args) {
 		join.execute(servers, message);
 

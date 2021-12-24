@@ -3,6 +3,8 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'help',
 	description: 'Lista os comandos e os descreve',
+	guildOnly: false,
+	aliases: ['h'],
 	async execute(servers, message) {
 		const embed = new MessageEmbed()
 			.setTitle('Ajuda nos comandos do bot')
@@ -13,7 +15,6 @@ module.exports = {
 				'leave: Sai do canal de voz',
 				'p: Toca o audio do vídeo do youtube enviado, ou busca uma música no youtube baseado no que foi digitado',
 				'pause: Pausa a música tocando',
-				'ping: Pong! ',
 				'resume: Volta a tocar a música de onde ela parou',
 			]);
 

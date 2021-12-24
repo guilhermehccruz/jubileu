@@ -1,6 +1,8 @@
 module.exports = {
-	name: 'leave',
-	description: 'Sai do canal de voz',
+	name: 'clear',
+	description: 'Limpa a fila de músicas',
+	aliases: ['c'],
+	guildOnly: true,
 	async execute(servers, message) {
 		if (
 			typeof message.guild.voice === 'undefined' ||
@@ -11,11 +13,12 @@ module.exports = {
 			return;
 		}
 
-		await message.guild.voice.channel.leave();
+		servers.server.dispatcher.pause();
 
-		servers.server.connection = null;
 		servers.server.dispatcher = null;
 		servers.server.queue = [];
 		servers.server.playing = false;
+
+		message.reply('Ta limpo');
 	},
 };
