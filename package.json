@@ -24,6 +24,7 @@
 		"prettier-eslint": "^13.0.0"
 	},
 	"dependencies": {
+		"@discordjs/opus": "^0.5.3",
 		"discord.js": "^12.5.1",
 		"ffmpeg-static": "^4.3.0",
 		"googleapis": "^92.0.0",
