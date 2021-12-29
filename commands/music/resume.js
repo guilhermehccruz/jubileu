@@ -1,8 +1,10 @@
 module.exports = {
 	name: 'resume',
 	description: 'Voltar a tocar',
+	usage: '',
+	aliases: [],
 	guildOnly: true,
-	alises: [],
+	args: false,
 	async execute(servers, message) {
 		if (
 			typeof message.guild.voice === 'undefined' ||

@@ -13,10 +13,10 @@ const join = require('./join');
 module.exports = {
 	name: 'play',
 	description: 'Toca uma pra você',
-	aliases: ['p'],
-	args: true,
 	usage: '<url/nome da música>',
+	aliases: ['p'],
 	guildOnly: true,
+	args: true,
 	async execute(servers, message, args) {
 		join.execute(servers, message);
 
@@ -72,9 +72,7 @@ async function addToQueue(servers, url, title, channel) {
 	if (servers.server.queue.length > 0) {
 		await embedMessage(
 			channel,
-			`Adicionado a fila - Posição ${
-				parseInt(servers.server.queue.length) + 1
-			}`,
+			`Adicionado a fila - Posição ${servers.server.queue.length}`,
 			title,
 			url,
 		);
@@ -117,7 +115,9 @@ async function playMusic(servers, channel) {
 }
 
 async function embedMessage(channel, title, videoTitle, url) {
-	const embed = new MessageEmbed().setTitle(title).addField(videoTitle, url);
+	const embed = new MessageEmbed()
+		.setTitle(title)
+		.setDescription(`[${videoTitle}](${url})`);
 
 	channel.send(embed);
 }

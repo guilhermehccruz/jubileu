@@ -1,8 +1,10 @@
 module.exports = {
 	name: 'leave',
 	description: 'Sai do canal de voz',
+	usage: '',
 	aliases: ['l'],
 	guildOnly: true,
+	args: false,
 	async execute(servers, message) {
 		if (
 			typeof message.guild.voice === 'undefined' ||

@@ -3,8 +3,10 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'nowplaying',
 	description: 'Mostra a música que está tocando',
-	guildOnly: true,
+	usage: '',
 	aliases: ['np'],
+	guildOnly: true,
+	args: false,
 	async execute(servers, message) {
 		if (!servers.server.playing) {
 			return;
@@ -12,7 +14,9 @@ module.exports = {
 
 		const embed = new MessageEmbed()
 			.setTitle('Agora tá tocando')
-			.addField(servers.server.queue[0].title, servers.server.queue[0].url);
+			.setDescription(
+				`[${servers.server.queue[0].title}](${servers.server.queue[0].url})`,
+			);
 
 		message.reply(embed);
 	},

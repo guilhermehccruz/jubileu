@@ -3,8 +3,10 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'help',
 	description: 'Lista os comandos e os descreve',
-	guildOnly: false,
+	usage: '',
 	aliases: ['h'],
+	guildOnly: false,
+	args: false,
 	async execute(servers, message) {
 		const embed = new MessageEmbed()
 			.setTitle('Ajuda nos comandos do bot')

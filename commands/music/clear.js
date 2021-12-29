@@ -1,8 +1,10 @@
 module.exports = {
 	name: 'clear',
 	description: 'Limpa a fila de músicas',
+	usage: '',
 	aliases: ['c'],
 	guildOnly: true,
+	args: false,
 	async execute(servers, message) {
 		if (
 			typeof message.guild.voice === 'undefined' ||
