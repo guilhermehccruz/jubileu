@@ -1,7 +1,5 @@
 const { MessageEmbed } = require('discord.js');
 
-const embed = new MessageEmbed();
-
 module.exports = {
 	name: 'queue',
 	description: 'Voltar a tocar',
@@ -10,45 +8,46 @@ module.exports = {
 	guildOnly: true,
 	args: false,
 	async execute(servers, message) {
-		try {
-			if (servers.server.queue.length) {
-				let messageContent = '';
+		if (servers.server.queue.length) {
+			const messageContent = [''];
+			let index = 0;
 
-				servers.server.queue.forEach((music, i) => {
-					if (i == 0) {
-						messageContent += `Tocando Agora: [${music.title}](${music.url})`;
+			servers.server.queue.forEach((music, i) => {
+				if (i == 0) {
+					messageContent[
+						index
+					] += `Tocando Agora: [${music.title}](${music.url})`;
+				}
+				else {
+					if (i == 1) {
+						messageContent[index] += '\n\nPróximos na fila: \n';
 					}
-					else {
-						if (i == 1) {
-							messageContent += '\n\nPróximos na fila: \n';
-						}
 
-						if (messageContent.length + music.title.length > 4096) {
-							throw new Error('break');
-						}
-						else {
-							messageContent += `${i}- [${music.title}](${music.url})`;
-
-							if (i + 1 != servers.server.queue.length) {
-								messageContent += '\n';
-							}
-						}
+					if (
+						messageContent[index].length +
+							`${i}- [${music.title}](${music.url})\n`.length >
+						4096
+					) {
+						messageContent.push('');
+						index++;
 					}
-				});
 
-				embed.setTitle(`Fila de músicas em ${message.guild.name}`);
-				embed.setDescription(messageContent);
-			}
-		}
-		catch (error) {
-			if (error.message == 'break') {
-				message.channel.send(
-					'Não da pra mostrar todas as músicas pq o discord não aguenta mensagem tão grande, solução em desenvolvimento.',
-				);
-			}
-		}
-		finally {
-			message.channel.send(embed);
+					messageContent[index] += `${i}- [${music.title}](${music.url})\n`;
+
+					if (i + 1 != servers.server.queue.length) {
+						messageContent[index] += '\n';
+					}
+				}
+			});
+
+			messageContent.forEach((content, i) => {
+				const embed = new MessageEmbed();
+				if (i == 0) {
+					embed.setTitle(`Fila de músicas em ${message.guild.name}`);
+				}
+				embed.setDescription(content);
+				message.channel.send(embed);
+			});
 		}
 	},
 };
