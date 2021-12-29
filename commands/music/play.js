@@ -18,7 +18,7 @@ module.exports = {
 	guildOnly: true,
 	args: true,
 	async execute(servers, message, args) {
-		join.execute(servers, message);
+		if (!(await join.execute(servers, message))) return;
 
 		if (ytdl.validateURL(args[0])) {
 			const videoDetails = (await ytdl.getInfo(ytdl.getVideoID(args[0])))

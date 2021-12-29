@@ -7,9 +7,11 @@ module.exports = {
 	args: false,
 	async execute(servers, message) {
 		if (!message.member.voice.channel) {
-			return message.reply('conecta na porra de um canal de voz antes krl!');
+			message.reply('conecta na porra de um canal de voz antes krl!');
+			return false;
 		}
 
 		servers.server.connection = await message.member.voice.channel.join();
+		return true;
 	},
 };
