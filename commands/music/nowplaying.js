@@ -4,7 +4,7 @@ module.exports = {
 	name: 'nowplaying',
 	description: 'Mostra a música que está tocando',
 	usage: '',
-	aliases: ['np'],
+	aliases: ['np', 'now', 'playing'],
 	guildOnly: true,
 	args: false,
 	async execute(servers, message) {

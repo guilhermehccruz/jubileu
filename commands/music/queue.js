@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'queue',
-	description: 'Voltar a tocar',
+	description: 'Volta a tocar',
 	usage: '',
 	aliases: ['q'],
 	guildOnly: true,
