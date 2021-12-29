@@ -4,7 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "nodemon ."
+		"dev": "pm2 start . --name jubileu --watch",
+		"start": "pm2 start . --name jubileu",
+		"stop": "pm2 kill"
 	},
 	"repository": {
 		"type": "git",
@@ -19,7 +21,6 @@
 	"homepage": "https://github.com/guilhermehccruz/jubileu#readme",
 	"devDependencies": {
 		"eslint": "^7.32.0",
-		"nodemon": "^2.0.15",
 		"prettier": "^2.5.1",
 		"prettier-eslint": "^13.0.0"
 	},

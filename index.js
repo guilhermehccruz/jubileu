@@ -20,10 +20,16 @@ const eventFiles = fs
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args, client));
+		client.once(
+			event.name,
+			async (...args) => await event.execute(...args, client),
+		);
 	}
 	else {
-		client.on(event.name, (...args) => event.execute(...args, client, servers));
+		client.on(
+			event.name,
+			async (...args) => await event.execute(...args, client, servers),
+		);
 	}
 }
 

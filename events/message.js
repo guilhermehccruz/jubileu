@@ -1,5 +1,5 @@
 const { Collection } = require('discord.js');
-const { prefix } = require('../config.json');
+const { prefix, errorChannelId } = require('../config.json');
 const fs = require('fs');
 
 module.exports = {
@@ -51,7 +51,8 @@ module.exports = {
 			await command.execute(servers, message, args);
 		}
 		catch (error) {
-			console.error(error);
+			client.channels.cache.get(errorChannelId).send(error.message);
+
 			return message.reply('Ih... deu alguma merda no comando');
 		}
 	},
