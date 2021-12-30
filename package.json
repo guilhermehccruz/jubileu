@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "pm2 start . --name jubileu --watch",
 		"start": "pm2 start . --name jubileu",
-		"stop": "pm2 kill"
+		"stop": "pm2 kill",
+		"test": "nodemon ."
 	},
 	"repository": {
 		"type": "git",
@@ -29,6 +30,7 @@
 		"discord.js": "^12.5.1",
 		"ffmpeg-static": "^4.3.0",
 		"googleapis": "^92.0.0",
+		"nodemon": "^2.0.15",
 		"ytdl-core": "^4.9.2"
 	}
 }

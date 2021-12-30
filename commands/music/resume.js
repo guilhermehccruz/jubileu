@@ -10,7 +10,8 @@ module.exports = {
 			typeof message.guild.voice === 'undefined' ||
 			message.guild.voice === null ||
 			typeof servers.server.dispatcher === 'undefined' ||
-			servers.server.dispatcher === null
+			servers.server.dispatcher === null ||
+			servers.server.paused == false
 		) {
 			return;
 		}

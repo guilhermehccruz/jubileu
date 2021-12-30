@@ -51,7 +51,9 @@ module.exports = {
 			await command.execute(servers, message, args, client);
 		}
 		catch (error) {
-			client.channels.cache.get(errorChannelId).send(error.message);
+			client.channels.cache
+				.get(errorChannelId)
+				.send(error.message, { split: true });
 
 			return message.reply('Ih... deu alguma merda no comando');
 		}

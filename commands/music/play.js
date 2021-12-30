@@ -2,12 +2,14 @@ const ytdl = require('ytdl-core');
 const ytdlFilters = {
 	quality: 'highestaudio',
 	filter: 'audioonly',
-	fmt: 'mp3',
-	highWaterMark: 1 << 25,
+	highWaterMark: 50,
+	volume: false,
+	type: 'opus',
 };
 const { youtube_v3 } = require('googleapis');
 const { google_key } = require('../../config.json');
 const { MessageEmbed } = require('discord.js');
+const { log } = require('../../log');
 const join = require('./join');
 
 module.exports = {
@@ -17,7 +19,7 @@ module.exports = {
 	aliases: ['p'],
 	guildOnly: true,
 	args: true,
-	async execute(servers, message, args) {
+	async execute(servers, message, args, client) {
 		if (!(await join.execute(servers, message))) return;
 
 		if (ytdl.validateURL(args[0])) {
@@ -43,7 +45,7 @@ module.exports = {
 				},
 				async (err, res) => {
 					if (err) {
-						console.log(err);
+						log(client, err);
 					}
 
 					try {
@@ -94,18 +96,20 @@ async function playMusic(servers, channel) {
 			ytdl(servers.server.queue[0].url, ytdlFilters),
 		);
 
-		await embedMessage(
-			channel,
-			'Agora tocando',
-			servers.server.queue[0].title,
-			servers.server.queue[0].url,
-		);
+		servers.server.dispatcher.on('start', async () => {
+			await embedMessage(
+				channel,
+				'Agora tocando',
+				servers.server.queue[0].title,
+				servers.server.queue[0].url,
+			);
+		});
 
-		servers.server.dispatcher.on('finish', () => {
-			servers.server.queue.shift();
+		servers.server.dispatcher.on('finish', async () => {
+			await servers.server.queue.shift();
 			servers.server.playing = false;
 			if (servers.server.queue.length > 0) {
-				playMusic(servers, channel);
+				await playMusic(servers, channel);
 			}
 			else {
 				servers.server.dispatcher = null;

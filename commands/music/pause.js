@@ -10,12 +10,13 @@ module.exports = {
 			typeof message.guild.voice === 'undefined' ||
 			message.guild.voice === null ||
 			typeof servers.server.dispatcher === 'undefined' ||
-			servers.server.dispatcher === null
+			servers.server.dispatcher === null ||
+			servers.server.paused == true
 		) {
 			return;
 		}
 
-		await servers.server.dispatcher.pause();
+		await servers.server.dispatcher.pause(true);
 		servers.server.paused = true;
 
 		await message.reply('Parou');
