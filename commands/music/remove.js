@@ -9,8 +9,8 @@ module.exports = {
 		if (
 			typeof message.guild.voice === 'undefined' ||
 			message.guild.voice === null ||
-			typeof servers.server.dispatcher === 'undefined' ||
-			servers.server.dispatcher === null
+			typeof servers[message.guild.id].dispatcher === 'undefined' ||
+			servers[message.guild.id].dispatcher === null
 		) {
 			return;
 		}
@@ -27,13 +27,13 @@ module.exports = {
 			return await message.reply('Use ".skip" pra pular a música atual');
 		}
 
-		if (args[0] < 1 || args[0] >= servers.server.queue.length) {
+		if (args[0] < 1 || args[0] >= servers[message.guild.id].queue.length) {
 			return await message.reply(
 				'Não da pra pular a música se ela não estiver na fila carai',
 			);
 		}
 
-		servers.server.queue.splice(args[0], 1);
+		servers[message.guild.id].queue.splice(args[0], 1);
 
 		return await message.reply('Removido...');
 	},

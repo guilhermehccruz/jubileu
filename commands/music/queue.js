@@ -8,11 +8,11 @@ module.exports = {
 	guildOnly: true,
 	args: false,
 	async execute(servers, message) {
-		if (servers.server.queue.length) {
+		if (servers[message.guild.id].queue.length) {
 			const messageContent = [''];
 			let index = 0;
 
-			servers.server.queue.forEach((music, i) => {
+			servers[message.guild.id].queue.forEach((music, i) => {
 				if (i == 0) {
 					messageContent[
 						index
@@ -34,7 +34,7 @@ module.exports = {
 
 					messageContent[index] += `${i}- [${music.title}](${music.url})\n`;
 
-					if (i + 1 != servers.server.queue.length) {
+					if (i + 1 != servers[message.guild.id].queue.length) {
 						messageContent[index] += '\n';
 					}
 				}

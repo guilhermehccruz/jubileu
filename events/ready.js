@@ -1,10 +1,10 @@
-const { readyChannelId } = require('../config.json');
+const { readyChannelId, serversChanelId } = require('../config.json');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'ready',
 	once: true,
-	async execute(client) {
+	async execute(client, servers) {
 		const dateObj = new Date();
 
 		const hour = ('0' + dateObj.getHours()).slice(-2);
@@ -17,10 +17,27 @@ module.exports = {
 
 		const fullDate = `${hour}:${minute}:${second} - ${day}/${month}/${year}`;
 
-		const embed = new MessageEmbed()
+		const readyEmbed = new MessageEmbed()
 			.setTitle('Pai ta on')
 			.setDescription(fullDate);
 
-		await client.channels.cache.get(readyChannelId).send(embed);
+		const serverNames = client.guilds.cache.map((guild) => {
+			servers[guild.id] = {
+				connection: null,
+				dispatcher: null,
+				queue: [],
+				playing: false,
+				paused: false,
+			};
+
+			return guild.name;
+		});
+
+		const serversEmbed = new MessageEmbed()
+			.setTitle('Lista de servidores na hora que ligou')
+			.setDescription(serverNames.join('\n'));
+
+		await client.channels.cache.get(readyChannelId).send(readyEmbed);
+		await client.channels.cache.get(serversChanelId).send(serversEmbed);
 	},
 };

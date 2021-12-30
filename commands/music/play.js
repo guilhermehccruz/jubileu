@@ -28,7 +28,7 @@ module.exports = {
 
 			const title = videoDetails.title;
 
-			await addToQueue(servers, args[0], title, message.channel);
+			await addToQueue(servers, args[0], title, message);
 		}
 		else {
 			const youtube = new youtube_v3.Youtube({
@@ -59,7 +59,7 @@ module.exports = {
 
 						const title = videoDetails.title;
 
-						await addToQueue(servers, url, title, message.channel);
+						await addToQueue(servers, url, title, message);
 					}
 					catch (error) {
 						if (error.name === 'Error [VOICE_PLAY_INTERFACE_BAD_TYPE]') return;
@@ -70,49 +70,51 @@ module.exports = {
 	},
 };
 
-async function addToQueue(servers, url, title, channel) {
-	if (servers.server.queue.length > 0) {
+async function addToQueue(servers, url, title, message) {
+	if (servers[message.guild.id].queue.length > 0) {
 		await embedMessage(
-			channel,
-			`Adicionado a fila - Posição ${servers.server.queue.length}`,
+			message.channel,
+			`Adicionado a fila - Posição ${servers[message.guild.id].queue.length}`,
 			title,
 			url,
 		);
 	}
 
-	servers.server.queue.push({
+	servers[message.guild.id].queue.push({
 		url: url,
 		title: title,
 	});
 
-	await playMusic(servers, channel);
+	await playMusic(servers, message);
 }
 
-async function playMusic(servers, channel) {
-	if (servers.server.playing === false) {
-		servers.server.playing = true;
+async function playMusic(servers, message) {
+	if (servers[message.guild.id].playing === false) {
+		servers[message.guild.id].playing = true;
 
-		servers.server.dispatcher = await servers.server.connection.play(
-			ytdl(servers.server.queue[0].url, ytdlFilters),
+		servers[message.guild.id].dispatcher = await servers[
+			message.guild.id
+		].connection.play(
+			ytdl(servers[message.guild.id].queue[0].url, ytdlFilters),
 		);
 
-		servers.server.dispatcher.on('start', async () => {
+		servers[message.guild.id].dispatcher.on('start', async () => {
 			await embedMessage(
-				channel,
+				message.channel,
 				'Agora tocando',
-				servers.server.queue[0].title,
-				servers.server.queue[0].url,
+				servers[message.guild.id].queue[0].title,
+				servers[message.guild.id].queue[0].url,
 			);
 		});
 
-		servers.server.dispatcher.on('finish', async () => {
-			await servers.server.queue.shift();
-			servers.server.playing = false;
-			if (servers.server.queue.length > 0) {
-				await playMusic(servers, channel);
+		servers[message.guild.id].dispatcher.on('finish', async () => {
+			await servers[message.guild.id].queue.shift();
+			servers[message.guild.id].playing = false;
+			if (servers[message.guild.id].queue.length > 0) {
+				await playMusic(servers, message);
 			}
 			else {
-				servers.server.dispatcher = null;
+				servers[message.guild.id].dispatcher = null;
 			}
 		});
 	}

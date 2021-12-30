@@ -9,15 +9,15 @@ module.exports = {
 		if (
 			typeof message.guild.voice === 'undefined' ||
 			message.guild.voice === null ||
-			typeof servers.server.dispatcher === 'undefined' ||
-			servers.server.dispatcher === null ||
-			servers.server.paused == false
+			typeof servers[message.guild.id].dispatcher === 'undefined' ||
+			servers[message.guild.id].dispatcher === null ||
+			servers[message.guild.id].paused == false
 		) {
 			return;
 		}
 
-		await servers.server.dispatcher.resume();
-		servers.server.paused = false;
+		await servers[message.guild.id].dispatcher.resume();
+		servers[message.guild.id].paused = false;
 
 		await message.reply('Voltou');
 	},

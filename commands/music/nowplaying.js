@@ -8,14 +8,16 @@ module.exports = {
 	guildOnly: true,
 	args: false,
 	async execute(servers, message) {
-		if (!servers.server.playing) {
+		if (!servers[message.guild.id].playing) {
 			return;
 		}
 
 		const embed = new MessageEmbed()
 			.setTitle('Agora tá tocando')
 			.setDescription(
-				`[${servers.server.queue[0].title}](${servers.server.queue[0].url})`,
+				`[${servers[message.guild.id].queue[0].title}](${
+					servers[message.guild.id].queue[0].url
+				})`,
 			);
 
 		message.reply(embed);

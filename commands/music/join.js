@@ -11,7 +11,8 @@ module.exports = {
 			return false;
 		}
 
-		servers.server.connection = await message.member.voice.channel.join();
+		servers[message.guild.id].connection =
+			await message.member.voice.channel.join();
 		return true;
 	},
 };

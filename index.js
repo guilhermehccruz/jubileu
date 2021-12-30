@@ -2,15 +2,7 @@ const { Client } = require('discord.js');
 const { token } = require('./config.json');
 const fs = require('fs');
 
-const servers = {
-	server: {
-		connection: null,
-		dispatcher: null,
-		queue: [],
-		playing: false,
-		paused: false,
-	},
-};
+const servers = [];
 
 const client = new Client();
 
@@ -23,7 +15,7 @@ for (const file of eventFiles) {
 	if (event.once) {
 		client.once(
 			event.name,
-			async (...args) => await event.execute(...args, client),
+			async (...args) => await event.execute(...args, client, servers),
 		);
 	}
 	else {

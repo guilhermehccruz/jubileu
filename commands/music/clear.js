@@ -9,18 +9,18 @@ module.exports = {
 		if (
 			typeof message.guild.voice === 'undefined' ||
 			message.guild.voice === null ||
-			typeof servers.server.dispatcher === 'undefined' ||
-			servers.server.dispatcher === null
+			typeof servers[message.guild.id].dispatcher === 'undefined' ||
+			servers[message.guild.id].dispatcher === null
 		) {
 			return;
 		}
 
-		servers.server.dispatcher.pause();
+		servers[message.guild.id].dispatcher.pause();
 
-		servers.server.dispatcher = null;
-		servers.server.queue = [];
-		servers.server.playing = false;
-		servers.server.paused = false;
+		servers[message.guild.id].dispatcher = null;
+		servers[message.guild.id].queue = [];
+		servers[message.guild.id].playing = false;
+		servers[message.guild.id].paused = false;
 
 		message.reply('Ta limpo');
 	},

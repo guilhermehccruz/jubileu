@@ -9,18 +9,18 @@ module.exports = {
 		if (
 			typeof message.guild.voice === 'undefined' ||
 			message.guild.voice === null ||
-			typeof servers.server.dispatcher === 'undefined' ||
-			servers.server.dispatcher === null
+			typeof servers[message.guild.id].dispatcher === 'undefined' ||
+			servers[message.guild.id].dispatcher === null
 		) {
 			return;
 		}
 
-		if (servers.server.paused) {
-			await servers.server.dispatcher.resume();
-			servers.server.paused = false;
+		if (servers[message.guild.id].paused) {
+			await servers[message.guild.id].dispatcher.resume();
+			servers[message.guild.id].paused = false;
 		}
 
-		await servers.server.dispatcher.end();
+		await servers[message.guild.id].dispatcher.end();
 
 		return await message.reply('Pulando...');
 	},
