@@ -20,6 +20,7 @@ module.exports = {
 		servers.server.dispatcher = null;
 		servers.server.queue = [];
 		servers.server.playing = false;
+		servers.server.paused = false;
 
 		message.reply('Ta limpo');
 	},

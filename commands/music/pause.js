@@ -16,6 +16,7 @@ module.exports = {
 		}
 
 		await servers.server.dispatcher.pause();
+		servers.server.paused = true;
 
 		await message.reply('Parou');
 	},

@@ -16,6 +16,7 @@ module.exports = {
 		}
 
 		await servers.server.dispatcher.resume();
+		servers.server.paused = false;
 
 		await message.reply('Voltou');
 	},

@@ -8,6 +8,7 @@ const servers = {
 		dispatcher: null,
 		queue: [],
 		playing: false,
+		paused: false,
 	},
 };
 

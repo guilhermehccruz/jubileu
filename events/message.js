@@ -48,7 +48,7 @@ module.exports = {
 		}
 
 		try {
-			await command.execute(servers, message, args);
+			await command.execute(servers, message, args, client);
 		}
 		catch (error) {
 			client.channels.cache.get(errorChannelId).send(error.message);

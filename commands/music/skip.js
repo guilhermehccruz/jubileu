@@ -15,8 +15,13 @@ module.exports = {
 			return;
 		}
 
+		if (servers.server.paused) {
+			await servers.server.dispatcher.resume();
+			servers.server.paused = false;
+		}
+
 		await servers.server.dispatcher.end();
 
-		await message.reply('Pulando...');
+		return await message.reply('Pulando...');
 	},
 };
