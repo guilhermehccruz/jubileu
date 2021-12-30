@@ -4,10 +4,9 @@ const { serversChanelId } = require('../config.json');
 module.exports = {
 	name: 'guildDelete',
 	async execute(guild, client, servers) {
-		const embeds = [];
-		console.log(guild.id);
-
 		delete servers[guild.id];
+
+		const embeds = [];
 
 		embeds.push(
 			new MessageEmbed()
