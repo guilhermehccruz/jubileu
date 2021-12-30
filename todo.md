@@ -2,3 +2,4 @@
 
 - [ ] work in multiple servers
 - [ ] create move song in queue command
+- [ ] play playlist
