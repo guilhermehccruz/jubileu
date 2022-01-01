@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core');
 const ytdlFilters = {
 	quality: 'highestaudio',
 	filter: 'audioonly',
-	highWaterMark: 50,
+	highWaterMark: 1 << 25,
 	volume: false,
 	type: 'opus',
 };
@@ -90,8 +90,6 @@ async function addToQueue(servers, url, title, message) {
 
 async function playMusic(servers, message) {
 	if (servers[message.guild.id].playing === false) {
-		servers[message.guild.id].playing = true;
-
 		servers[message.guild.id].dispatcher = await servers[
 			message.guild.id
 		].connection.play(
@@ -99,6 +97,7 @@ async function playMusic(servers, message) {
 		);
 
 		servers[message.guild.id].dispatcher.on('start', async () => {
+			servers[message.guild.id].playing = true;
 			await embedMessage(
 				message.channel,
 				'Agora tocando',

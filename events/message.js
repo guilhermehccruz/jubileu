@@ -51,6 +51,12 @@ module.exports = {
 			await command.execute(servers, message, args, client);
 		}
 		catch (error) {
+			if (error.statusCode == 410) {
+				return await message.reply(
+					'Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube. Assim, não conseguimos reproduzi-lo',
+				);
+			}
+
 			client.channels.cache
 				.get(errorChannelId)
 				.send(error.message, { split: true });
