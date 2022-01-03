@@ -6,7 +6,7 @@ module.exports = {
 	once: true,
 	async execute(client, servers) {
 		const dateObj = new Date();
-		console.log(dateObj);
+
 		const hour = ('0' + dateObj.getHours()).slice(-2);
 		const minute = ('0' + dateObj.getMinutes()).slice(-2);
 		const second = ('0' + dateObj.getSeconds()).slice(-2);
