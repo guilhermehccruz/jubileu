@@ -7,7 +7,7 @@ const ytdlFilters = {
 	type: 'opus',
 };
 const { youtube_v3 } = require('googleapis');
-const { google_key, logChannelId } = require('../../config.json');
+const { google_key, errorChannelId } = require('../../config.json');
 const { MessageEmbed } = require('discord.js');
 const join = require('./join');
 
@@ -45,7 +45,7 @@ module.exports = {
 				async (err, res) => {
 					if (err) {
 						return await client.channels.cache
-							.get(logChannelId)
+							.get(errorChannelId)
 							.send(err, { split: true });
 					}
 
