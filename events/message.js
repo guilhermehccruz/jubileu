@@ -57,9 +57,13 @@ module.exports = {
 				);
 			}
 
-			client.channels.cache
+			await client.channels.cache
 				.get(errorChannelId)
-				.send(error.message, { split: true });
+				.send(`Comando: ${message.content}\nErro: ${error.message}`, {
+					split: true,
+				});
+
+			console.log(`Comando: ${message.content}\nErro: ${error.message}`);
 
 			return message.reply('Ih... deu alguma merda no comando');
 		}

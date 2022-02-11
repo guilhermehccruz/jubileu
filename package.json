@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "pm2 start . --name jubileu --watch",
-		"start": "pm2 start . --name jubileu",
+		"start": "pm2 start . --name jubileu --log logs.log --time --cron='0 7 * * *'",
 		"stop": "pm2 kill",
 		"test": "nodemon ."
 	},
@@ -31,6 +31,6 @@
 		"ffmpeg-static": "^4.3.0",
 		"googleapis": "^92.0.0",
 		"nodemon": "^2.0.15",
-		"ytdl-core": "^4.9.2"
+		"ytdl-core": "^4.10.1"
 	}
 }
