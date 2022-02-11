@@ -5,6 +5,8 @@ const fs = require('fs');
 module.exports = {
 	name: 'message',
 	async execute(message, client, servers) {
+		if (!message.content.startsWith(prefix)) return;
+
 		client.commands = new Collection();
 
 		const commandFolders = fs.readdirSync('commands');
@@ -19,8 +21,6 @@ module.exports = {
 				client.commands.set(command.name, command);
 			}
 		}
-
-		if (!message.content.startsWith(prefix)) return;
 
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const commandName = args.shift().toLowerCase();
