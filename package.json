@@ -31,6 +31,7 @@
 		"ffmpeg-static": "^4.3.0",
 		"googleapis": "^92.0.0",
 		"nodemon": "^2.0.15",
-		"ytdl-core": "^4.10.1"
+		"ytdl-core": "^4.10.1",
+		"ytsr": "^3.6.0"
 	}
 }
