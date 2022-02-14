@@ -22,6 +22,6 @@ module.exports = {
 
 		await servers[message.guild.id].dispatcher.end();
 
-		return await message.reply('Pulando...');
+		return await message.channel.send('Pulando!');
 	},
 };

@@ -34,7 +34,9 @@ module.exports = {
 		if (!command) return;
 
 		if (command.guildOnly && message.channel.type === 'dm') {
-			return message.reply('Esse comando só pode ser usado em servidores');
+			return message.channel.send(
+				'Esse comando só pode ser usado em servidores',
+			);
 		}
 
 		if (command.args && !args.length) {
@@ -52,7 +54,7 @@ module.exports = {
 		}
 		catch (error) {
 			if (error.statusCode == 410) {
-				return await message.reply(
+				return await message.channel.send(
 					'Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube. Assim, não conseguimos reproduzi-lo',
 				);
 			}
@@ -65,7 +67,7 @@ module.exports = {
 
 			console.log(`Comando: ${message.content}\nErro: ${error.message}`);
 
-			return message.reply('Ih... deu alguma merda no comando');
+			return message.channel.send('Ih... deu alguma merda no comando');
 		}
 	},
 };

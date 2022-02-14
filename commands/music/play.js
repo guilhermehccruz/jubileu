@@ -40,7 +40,7 @@ async function getUrl(message, args) {
 	const searchResult = (await ytsr(filtered.url, { limit: 1 })).items[0];
 
 	if (!searchResult) {
-		return await message.reply(
+		return await message.channel.send(
 			'Não foi encontrado nenhum vídeo com essa pesquisa',
 		);
 	}

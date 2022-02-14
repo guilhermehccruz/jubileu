@@ -20,6 +20,6 @@ module.exports = {
 				})`,
 			);
 
-		message.reply(embed);
+		message.channel.send(embed);
 	},
 };

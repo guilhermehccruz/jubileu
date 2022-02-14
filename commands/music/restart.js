@@ -14,11 +14,12 @@ module.exports = {
 				.roles.cache.get(admRoleId)
 				.members.get(message.author.id)
 		) {
-			return message.reply(
+			return message.channel.send(
 				'Você não possui permissão pra executar esse comando',
 			);
 		}
 
+		message.channel.send('Reiniciando!');
 		process.exit();
 	},
 };

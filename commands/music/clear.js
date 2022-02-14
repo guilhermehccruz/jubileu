@@ -22,6 +22,6 @@ module.exports = {
 		servers[message.guild.id].playing = false;
 		servers[message.guild.id].paused = false;
 
-		message.reply('Ta limpo');
+		message.channel.send('Ta limpo!');
 	},
 };

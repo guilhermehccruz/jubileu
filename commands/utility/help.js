@@ -52,7 +52,7 @@ module.exports = {
 
 			data += `\n\nPra ver mais informações sobre o comando, envie "${prefix}help [nome do comando]"`;
 
-			return message.reply(data, { split: true });
+			return message.channel.send(data, { split: true });
 		}
 
 		const name = args[0].toLowerCase();
@@ -61,7 +61,7 @@ module.exports = {
 			commands.find((c) => c.aliases && c.aliases.includes(name));
 
 		if (!command) {
-			return message.reply('Esse não é um comando válido');
+			return message.channel.send('Esse não é um comando válido');
 		}
 
 		data += `Nome do comando: ${command.name}`;

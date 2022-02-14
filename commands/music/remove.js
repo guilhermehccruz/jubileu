@@ -16,25 +16,25 @@ module.exports = {
 		}
 
 		if (args.length > 1) {
-			return await message.reply('Só é aceito um parâmetro');
+			return await message.channel.send('Só é aceito um parâmetro');
 		}
 
 		if (isNaN(args[0])) {
-			return await message.reply('Apenas números são aceitos');
+			return await message.channel.send('Apenas números são aceitos');
 		}
 
 		if (args[0] == 0) {
-			return await message.reply('Use ".skip" pra pular a música atual');
+			return await message.channel.send('Use ".skip" pra pular a música atual');
 		}
 
 		if (args[0] < 1 || args[0] >= servers[message.guild.id].queue.length) {
-			return await message.reply(
+			return await message.channel.send(
 				'Não da pra pular a música se ela não estiver na fila carai',
 			);
 		}
 
 		servers[message.guild.id].queue.splice(args[0], 1);
 
-		return await message.reply('Removido...');
+		return await message.channel.send('Removido!');
 	},
 };

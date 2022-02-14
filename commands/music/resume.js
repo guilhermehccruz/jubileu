@@ -19,6 +19,6 @@ module.exports = {
 		await servers[message.guild.id].dispatcher.resume();
 		servers[message.guild.id].paused = false;
 
-		await message.reply('Voltou');
+		await message.channel.send('Voltou!');
 	},
 };
