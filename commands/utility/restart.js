@@ -19,7 +19,7 @@ module.exports = {
 			);
 		}
 
-		message.channel.send('Reiniciando!');
+		await message.channel.send('Reiniciando!');
 		process.exit();
 	},
 };
