@@ -14,7 +14,9 @@ module.exports = {
 				.setDescription(`Servidor: ${guild.name}`),
 		);
 
-		const serverNames = client.guilds.cache.map((guilds) => guilds.name);
+		const serverNames = await client.guilds.cache.map((guilds) => {
+			return guilds.name;
+		});
 
 		embeds.push(
 			new MessageEmbed()

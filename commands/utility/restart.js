@@ -14,7 +14,7 @@ module.exports = {
 				.roles.cache.get(admRoleId)
 				.members.get(message.author.id)
 		) {
-			return message.channel.send(
+			return await message.channel.send(
 				'Você não possui permissão pra executar esse comando',
 			);
 		}

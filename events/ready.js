@@ -7,13 +7,13 @@ module.exports = {
 	async execute(client, servers) {
 		const dateObj = new Date();
 
-		const hour = ('0' + dateObj.getHours()).slice(-2);
-		const minute = ('0' + dateObj.getMinutes()).slice(-2);
-		const second = ('0' + dateObj.getSeconds()).slice(-2);
+		const hour = `0${dateObj.getHours()}`.slice(- 2);
+		const minute = `0${dateObj.getMinutes()}`.slice(- 2);
+		const second = `0${dateObj.getSeconds()}`.slice(- 2);
 
-		const day = ('0' + dateObj.getDate()).slice(-2);
-		const month = ('0' + dateObj.getMonth() + 1).slice(-2);
-		const year = ('0' + dateObj.getFullYear()).slice(-2);
+		const day = `0${dateObj.getDate()}`.slice(- 2);
+		const month = `0${dateObj.getMonth()}${1}`.slice(- 2);
+		const year = `0${dateObj.getFullYear()}`.slice(- 2);
 
 		const fullDate = `${hour}:${minute}:${second} - ${day}/${month}/${year}`;
 

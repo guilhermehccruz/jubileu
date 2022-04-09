@@ -15,13 +15,13 @@ module.exports = {
 			return;
 		}
 
-		servers[message.guild.id].dispatcher.pause();
+		await servers[message.guild.id].dispatcher.pause();
 
 		servers[message.guild.id].dispatcher = null;
 		servers[message.guild.id].queue = [];
 		servers[message.guild.id].playing = false;
 		servers[message.guild.id].paused = false;
 
-		message.channel.send('Ta limpo!');
+		return await message.channel.send('Ta limpo!');
 	},
 };

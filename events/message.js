@@ -5,7 +5,9 @@ const fs = require('fs');
 module.exports = {
 	name: 'message',
 	async execute(message, client, servers) {
-		if (!message.content.startsWith(prefix)) return;
+		if (!message.content.startsWith(prefix)) {
+			return;
+		}
 
 		client.commands = new Collection();
 
@@ -14,7 +16,9 @@ module.exports = {
 		for (const folder of commandFolders) {
 			const commandFiles = fs
 				.readdirSync(`commands/${folder}`)
-				.filter((file) => file.endsWith('.js'));
+				.filter((file) => {
+					return file.endsWith('.js');
+				});
 
 			for (const file of commandFiles) {
 				const command = require(`../commands/${folder}/${file}`);
@@ -28,13 +32,17 @@ module.exports = {
 		const command =
 			client.commands.get(commandName) ||
 			client.commands.find(
-				(cmd) => cmd.aliases && cmd.aliases.includes(commandName),
+				(cmd) => {
+					return cmd.aliases && cmd.aliases.includes(commandName);
+				},
 			);
 
-		if (!command) return;
+		if (!command) {
+			return;
+		}
 
 		if (command.guildOnly && message.channel.type === 'dm') {
-			return message.channel.send(
+			return await message.channel.send(
 				'Esse comando só pode ser usado em servidores',
 			);
 		}
@@ -46,16 +54,18 @@ module.exports = {
 				reply += `\nO jeito certo de usar o comando é: \`${prefix}${command.name} ${command.usage}\``;
 			}
 
-			return message.channel.send(reply);
+			return await message.channel.send(reply);
 		}
 
 		try {
 			await command.execute(servers, message, args, client);
-		}
-		catch (error) {
+		} catch (error) {
 			if (error.statusCode == 410) {
 				return await message.channel.send(
-					'Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube. Assim, não conseguimos reproduzi-lo',
+					`
+					Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube.
+					Assim, não conseguimos reproduzi-lo
+					`,
 				);
 			}
 
@@ -67,7 +77,7 @@ module.exports = {
 
 			console.log(`Comando: ${message.content}\nErro: ${error.message}`);
 
-			return message.channel.send('Ih... deu alguma merda no comando');
+			return await message.channel.send('Ih... deu alguma merda no comando');
 		}
 	},
 };

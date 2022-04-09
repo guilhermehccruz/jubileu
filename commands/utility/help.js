@@ -1,6 +1,6 @@
 const { prefix } = require('../../config.json');
 const fs = require('fs');
-const { command_category } = require('../../translations.json');
+const { commandCategory } = require('../../translations.json');
 
 module.exports = {
 	name: 'help',
@@ -23,7 +23,9 @@ module.exports = {
 			for (const folder of commandFolders) {
 				const commandFiles = fs
 					.readdirSync(`commands/${folder}`)
-					.filter((file) => file.endsWith('.js'));
+					.filter((file) => {
+						return file.endsWith('.js');
+					});
 
 				const folderCommands = [];
 				for (const file of commandFiles) {
@@ -39,7 +41,7 @@ module.exports = {
 			}
 
 			for (const category in categories) {
-				data += `\n\nCategoria: ${command_category[category]}`;
+				data += `\n\nCategoria: ${commandCategory[category]}`;
 
 				categories[category].forEach((command) => {
 					data += `\n${command.name}`;
@@ -52,16 +54,16 @@ module.exports = {
 
 			data += `\n\nPra ver mais informações sobre o comando, envie "${prefix}help [nome do comando]"`;
 
-			return message.channel.send(data, { split: true });
+			return await message.channel.send(data, { split: true });
 		}
 
 		const name = args[0].toLowerCase();
-		const command =
-			commands.get(name) ||
-			commands.find((c) => c.aliases && c.aliases.includes(name));
+		const command = await commands.get(name) || commands.find((c) => {
+			return c.aliases && c.aliases.includes(name);
+		});
 
 		if (!command) {
-			return message.channel.send('Esse não é um comando válido');
+			return await message.channel.send('Esse não é um comando válido');
 		}
 
 		data += `Nome do comando: ${command.name}`;
@@ -76,6 +78,6 @@ module.exports = {
 			data += `\nComo usar: ${prefix}${command.name} ${command.usage}`;
 		}
 
-		message.channel.send(data, { split: true });
+		return await message.channel.send(data, { split: true });
 	},
 };

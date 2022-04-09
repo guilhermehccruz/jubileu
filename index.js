@@ -8,20 +8,25 @@ const client = new Client();
 
 const eventFiles = fs
 	.readdirSync('./events')
-	.filter((file) => file.endsWith('.js'));
+	.filter((file) => {
+		return file.endsWith('.js');
+	});
 
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
 		client.once(
 			event.name,
-			async (...args) => await event.execute(...args, client, servers),
+			async (...args) => {
+				return await event.execute(...args, client, servers);
+			},
 		);
-	}
-	else {
+	} else {
 		client.on(
 			event.name,
-			async (...args) => await event.execute(...args, client, servers),
+			async (...args) => {
+				return await event.execute(...args, client, servers);
+			},
 		);
 	}
 }

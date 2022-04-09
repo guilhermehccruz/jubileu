@@ -18,7 +18,9 @@ module.exports = {
 	guildOnly: true,
 	args: true,
 	async execute(servers, message, args) {
-		if (!(await join.execute(servers, message))) return;
+		if (!await join.execute(servers, message)) {
+			return;
+		}
 
 		const url = await getUrl(message, args);
 
@@ -40,9 +42,7 @@ async function getUrl(message, args) {
 	const searchResult = (await ytsr(filtered.url, { limit: 1 })).items[0];
 
 	if (!searchResult) {
-		return await message.channel.send(
-			'Não foi encontrado nenhum vídeo com essa pesquisa',
-		);
+		return await message.channel.send('Não foi encontrado nenhum vídeo com essa pesquisa');
 	}
 
 	return searchResult.url;
@@ -88,8 +88,7 @@ async function playMusic(servers, message) {
 		servers[message.guild.id].playing = false;
 		if (servers[message.guild.id].queue.length > 0) {
 			await playMusic(servers, message);
-		}
-		else {
+		} else {
 			servers[message.guild.id].dispatcher = null;
 		}
 	});

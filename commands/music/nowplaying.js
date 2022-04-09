@@ -20,6 +20,6 @@ module.exports = {
 				})`,
 			);
 
-		message.channel.send(embed);
+		return await message.channel.send(embed);
 	},
 };
