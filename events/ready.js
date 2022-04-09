@@ -12,8 +12,8 @@ module.exports = {
 		const second = `0${dateObj.getSeconds()}`.slice(- 2);
 
 		const day = `0${dateObj.getDate()}`.slice(- 2);
-		const month = `0${dateObj.getMonth()}${1}`.slice(- 2);
-		const year = `0${dateObj.getFullYear()}`.slice(- 2);
+		const month = `0${dateObj.getMonth() + 1}`.slice(- 2);
+		const year = dateObj.getFullYear();
 
 		const fullDate = `${hour}:${minute}:${second} - ${day}/${month}/${year}`;
 
@@ -39,5 +39,7 @@ module.exports = {
 
 		await client.channels.cache.get(readyChannelId).send(readyEmbed);
 		await client.channels.cache.get(serversChanelId).send(serversEmbed);
+
+		console.log('Ready!');
 	},
 };

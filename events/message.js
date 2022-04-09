@@ -62,10 +62,8 @@ module.exports = {
 		} catch (error) {
 			if (error.statusCode == 410) {
 				return await message.channel.send(
-					`
-					Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube.
-					Assim, não conseguimos reproduzi-lo
-					`,
+					'Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube.' +
+					'Assim, não conseguimos reproduzi-lo',
 				);
 			}
 
