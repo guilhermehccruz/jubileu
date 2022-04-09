@@ -31,7 +31,6 @@ module.exports = {
 			return;
 		}
 
-		console.log(4);
 		for await (const video of videos) {
 			await addToQueue(servers, video.url, video.title, message);
 		}
@@ -69,18 +68,15 @@ async function getUrl(message, args) {
 			return;
 		}
 	}
-	console.log(1);
 	const filtered = (await ytsr.getFilters(args.join(' ')))
 		.get('Type')
 		.get('Video');
 
-	console.log(2);
 	const searchResult = (await ytsr(filtered.url, { limit: 1 })).items[0];
 
 	if (!searchResult) {
 		return await message.channel.send('Não foi encontrado nenhum vídeo com essa pesquisa');
 	}
-	console.log(3);
 
 	return [
 		{
