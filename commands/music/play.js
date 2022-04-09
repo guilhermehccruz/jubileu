@@ -8,6 +8,7 @@ const ytdlFilters = {
 };
 const { MessageEmbed } = require('discord.js');
 const ytsr = require('ytsr');
+const ytpl = require('ytpl');
 const join = require('./join');
 
 module.exports = {
@@ -22,30 +23,71 @@ module.exports = {
 			return;
 		}
 
-		const url = await getUrl(message, args);
+		message.channel.send('Processando...');
 
-		const title = (await ytdl.getInfo(url)).videoDetails.title;
+		const videos = await getUrl(message, args);
 
-		await addToQueue(servers, url, title, message);
+		if (typeof videos === 'undefined') {
+			return;
+		}
+
+		console.log(4);
+		for await (const video of videos) {
+			await addToQueue(servers, video.url, video.title, message);
+		}
 	},
 };
 
 async function getUrl(message, args) {
 	if (ytdl.validateURL(args[0])) {
-		return args[0];
+		const video = (await ytdl.getInfo(args[0])).videoDetails;
+
+		return [{
+			url: video.video_url,
+			title: video.title,
+		}];
 	}
 
+	if (args[0].includes('/playlist?')) {
+		const result = [];
+		try {
+			const playlistId = await ytpl.getPlaylistID(args[0]);
+
+			(await ytpl(playlistId)).items.map((item) => {
+				result.push({
+					url: item.shortUrl,
+					title: item.title,
+				});
+			});
+
+			return result;
+		} catch (error) {
+			await message.channel.send(
+				'A playlist não foi encontrada. Se a playlist não for publica, não podemos acessá-la.',
+			);
+
+			return;
+		}
+	}
+	console.log(1);
 	const filtered = (await ytsr.getFilters(args.join(' ')))
 		.get('Type')
 		.get('Video');
 
+	console.log(2);
 	const searchResult = (await ytsr(filtered.url, { limit: 1 })).items[0];
 
 	if (!searchResult) {
 		return await message.channel.send('Não foi encontrado nenhum vídeo com essa pesquisa');
 	}
+	console.log(3);
 
-	return searchResult.url;
+	return [
+		{
+			url: searchResult.url,
+			title: searchResult.title,
+		},
+	];
 }
 
 async function addToQueue(servers, url, title, message) {
