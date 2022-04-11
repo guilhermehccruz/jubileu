@@ -1,4 +1,9 @@
-const ytdl = require('ytdl-core');
+import ytdl, { getInfo, validateURL } from 'ytdl-core';
+import ytpl, { getPlaylistID } from 'ytpl';
+import ytsr, { getFilters } from 'ytsr';
+import { MessageEmbed } from 'discord.js';
+import { execute as join } from './join';
+
 const ytdlFilters = {
 	quality: 'highestaudio',
 	filter: 'audioonly',
@@ -6,89 +11,78 @@ const ytdlFilters = {
 	volume: false,
 	type: 'opus',
 };
-const { MessageEmbed } = require('discord.js');
-const ytsr = require('ytsr');
-const ytpl = require('ytpl');
-const join = require('./join');
 
-module.exports = {
-	name: 'play',
-	description: 'Toca uma pra você',
-	usage: '<url/nome da música>',
-	aliases: ['p'],
-	guildOnly: true,
-	args: true,
-	async execute(servers, message, args) {
-		if (!await join.execute(servers, message)) {
-			return;
-		}
+export const name = 'play';
+export const description = 'Toca uma pra você';
+export const usage = '<url/nome da música>';
+export const aliases = ['p'];
+export const guildOnly = true;
+export const args = true;
 
-		message.channel.send('Processando...');
+export async function execute(servers, message, args) {
+	if (!await join(servers, message)) {
+		return;
+	}
 
-		const videos = await getUrl(message, args);
+	message.channel.send('Processando...');
 
-		if (typeof videos === 'undefined') {
-			return;
-		}
+	const urls = await getUrl(message, args);
 
-		for await (const video of videos) {
-			await addToQueue(servers, video.url, video.title, message);
-		}
-	},
-};
+	if (typeof urls === 'undefined') {
+		return;
+	}
+
+	for await (const url of urls) {
+		const video = (await getInfo(url)).videoDetails;
+
+		await addToQueue(servers, video.video_url, video.title, message);
+	}
+}
 
 async function getUrl(message, args) {
-	if (ytdl.validateURL(args[0])) {
-		const video = (await ytdl.getInfo(args[0])).videoDetails;
-
-		return [{
-			url: video.video_url,
-			title: video.title,
-		}];
+	if (validateURL(args[0])) {
+		return [args[0]];
 	}
 
 	if (args[0].includes('/playlist?')) {
 		const result = [];
 		try {
-			const playlistId = await ytpl.getPlaylistID(args[0]);
+			const playlistId = await getPlaylistID(args[0]);
 
-			(await ytpl(playlistId)).items.map((item) => {
-				result.push({
-					url: item.shortUrl,
-					title: item.title,
-				});
-			});
+			const videos = (await ytpl(playlistId)).items;
+
+			for (const video of videos) {
+				result.push(video.shortUrl);
+			}
 
 			return result;
 		} catch (error) {
-			await message.channel.send(
+			message.channel.send(
 				'A playlist não foi encontrada. Se a playlist não for publica, não podemos acessá-la.',
 			);
 
 			return;
 		}
 	}
-	const filtered = (await ytsr.getFilters(args.join(' ')))
+
+	const filtered = (await getFilters(args.join(' ')))
 		.get('Type')
 		.get('Video');
 
 	const searchResult = (await ytsr(filtered.url, { limit: 1 })).items[0];
 
 	if (!searchResult) {
-		return await message.channel.send('Não foi encontrado nenhum vídeo com essa pesquisa');
+		message.channel.send('Não foi encontrado nenhum vídeo com essa pesquisa');
+
+		return;
 	}
 
-	return [
-		{
-			url: searchResult.url,
-			title: searchResult.title,
-		},
-	];
+	return [searchResult.url];
 }
 
 async function addToQueue(servers, url, title, message) {
 	if (servers[message.guild.id].queue.length > 0) {
-		await embedMessage(
+		embedMessage(
 			message.channel,
 			`Adicionado a fila - Posição ${servers[message.guild.id].queue.length}`,
 			title,
@@ -111,9 +105,9 @@ async function playMusic(servers, message) {
 		message.guild.id
 	].connection.play(ytdl(servers[message.guild.id].queue[0].url, ytdlFilters));
 
-	servers[message.guild.id].dispatcher.on('start', async () => {
+	servers[message.guild.id].dispatcher.on('start', () => {
 		servers[message.guild.id].playing = true;
-		await embedMessage(
+		embedMessage(
 			message.channel,
 			'Agora tocando',
 			servers[message.guild.id].queue[0].title,
@@ -122,8 +116,9 @@ async function playMusic(servers, message) {
 	});
 
 	servers[message.guild.id].dispatcher.on('finish', async () => {
-		await servers[message.guild.id].queue.shift();
+		servers[message.guild.id].queue.shift();
 		servers[message.guild.id].playing = false;
+
 		if (servers[message.guild.id].queue.length > 0) {
 			await playMusic(servers, message);
 		} else {
@@ -132,8 +127,8 @@ async function playMusic(servers, message) {
 	});
 }
 
-async function embedMessage(channel, title, videoTitle, url) {
-	await channel.send(
+function embedMessage(channel, title, videoTitle, url) {
+	channel.send(
 		new MessageEmbed().setTitle(title).setDescription(`[${videoTitle}](${url})`),
 	);
 }

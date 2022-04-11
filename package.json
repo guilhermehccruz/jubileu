@@ -2,12 +2,12 @@
 	"name": "musicbot",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"scripts": {
-		"dev": "pm2 start . --name jubileu --watch",
-		"start": "pm2 start . --name jubileu --log logs.log --time --cron='0 7 * * *'",
+		"build": "npx babel src --out-dir dist",
+		"start": "npm run build; node .",
 		"stop": "pm2 kill",
-		"test": "nodemon ."
+		"pm2": "pm2 start pm2.json"
 	},
 	"repository": {
 		"type": "git",
@@ -21,14 +21,17 @@
 	},
 	"homepage": "https://github.com/guilhermehccruz/jubileu#readme",
 	"devDependencies": {
+		"@babel/cli": "^7.17.6",
+		"@babel/core": "^7.17.9",
+		"@babel/node": "^7.16.8",
+		"@babel/preset-env": "^7.16.11",
+		"babel-plugin-module-resolver": "^4.1.0",
 		"eslint": "^7.32.0"
 	},
 	"dependencies": {
 		"@discordjs/opus": "^0.5.3",
 		"discord.js": "^12.5.3",
 		"ffmpeg-static": "^4.4.1",
-		"googleapis": "^92.0.0",
-		"nodemon": "^2.0.15",
 		"ytdl-core": "^4.11.0",
 		"ytpl": "^2.3.0",
 		"ytsr": "^3.6.0"
