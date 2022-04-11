@@ -1,5 +1,6 @@
+import { jubileuId, prefix } from '@root/config.json';
+import { MessageEmbed } from 'discord.js';
 import { commandCategory } from '../../../translations.json';
-import { prefix } from '@root/config.json';
 import { readdirSync } from 'fs';
 
 export const name = 'help';
@@ -8,14 +9,10 @@ export const usage = '';
 export const aliases = ['h'];
 export const guildOnly = false;
 
-export async function execute(servers, message, args) {
-	let data = '';
-
+export async function execute(servers, message, args, client) {
 	const { commands } = message.client;
 
 	if (!args.length) {
-		data += 'lista de todos os comandos:';
-
 		const commandFolders = readdirSync('./src/commands');
 
 		const categories = {};
@@ -39,43 +36,65 @@ export async function execute(servers, message, args) {
 			});
 		}
 
-		for (const category in categories) {
-			data += `\n\nCategoria: ${commandCategory[category]}`;
+		const embeds = [];
 
-			categories[category].forEach((command) => {
-				data += `\n${command.name}`;
+		for (const category in categories) {
+			const categoryName = `Categoria: ${commandCategory[category]}`;
+			let commands = '';
+
+			for (const command of categories[category]) {
+				commands += `\n${command.name}`;
 
 				if (command.aliases.length) {
-					data += `, ${command.aliases.join(', ')}`;
+					commands += `, ${command.aliases.join(', ')}`;
 				}
-			});
+			}
+			embeds.push(
+				new MessageEmbed()
+					.setTitle(categoryName)
+					.setDescription(commands),
+			);
 		}
 
-		data += `\n\nPra ver mais informações sobre o comando, envie "${prefix}help [nome do comando]"`;
+		const avatarUrl = (await client.users.fetch(jubileuId)).displayAvatarURL();
 
-		return await message.channel.send(data, { split: true });
+		return message.channel.createWebhook('Jubileu', {
+			avatar: avatarUrl,
+		})
+			.then(webhook => {
+				return webhook.send(
+					`Para ver mais informações sobre o comando, envie "${prefix}help [nome do comando]"`,
+					{ embeds: embeds },
+				);
+			});
 	}
 
 	const name = args[0].toLowerCase();
-	const command = await commands.get(name) || commands.find((c) => {
+	const command = await commands.get(name) || await commands.find((c) => {
 		return c.aliases && c.aliases.includes(name);
 	});
 
 	if (!command) {
-		return await message.channel.send('Esse não é um comando válido');
+		return message.channel.send('Esse não é um comando válido');
 	}
 
-	data += `Nome do comando: ${command.name}`;
+	const commandName = `Nome do comando: ${command.name}`;
+
+	const description = [];
 
 	if (command.aliases) {
-		data += `\nOutros nomes: ${command.aliases.join(', ')}`;
+		description.push(`Outros nomes: ${command.aliases.join(', ')}`);
 	}
 	if (command.description) {
-		data += `\nDescrição: ${command.description}`;
+		description.push(`Descrição: ${command.description}`);
 	}
 	if (command.usage) {
-		data += `\nComo usar: ${prefix}${command.name} ${command.usage}`;
+		description.push(`\nComo usar: ${prefix}${command.name} ${command.usage}`);
 	}
 
-	return await message.channel.send(data, { split: true });
+	const embed = new MessageEmbed()
+		.setTitle(commandName)
+		.setDescription(description.join('\n'));
+
+	return message.channel.send(embed);
 }

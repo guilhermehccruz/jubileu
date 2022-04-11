@@ -52,10 +52,6 @@
 			"always"
 		],
 		"camelcase": "error",
-		"capitalized-comments": [
-			"error",
-			"always"
-		],
 		"curly": [
 			"error",
 			"all"
