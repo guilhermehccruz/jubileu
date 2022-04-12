@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "dist/index.js",
 	"scripts": {
-		"build": "npx babel src --out-dir dist",
+		"build": "babel src --out-dir dist",
 		"start": "npm run build; node .",
 		"stop": "pm2 kill",
 		"pm2": "pm2 start pm2.json"
@@ -32,6 +32,7 @@
 		"@discordjs/opus": "^0.5.3",
 		"discord.js": "^12.5.3",
 		"ffmpeg-static": "^4.4.1",
+		"pm2": "^5.2.0",
 		"ytdl-core": "^4.11.0",
 		"ytpl": "^2.3.0",
 		"ytsr": "^3.6.0"

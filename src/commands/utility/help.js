@@ -56,17 +56,29 @@ export async function execute(servers, message, args, client) {
 			);
 		}
 
+		message.guild.fetchWebhooks()
+			.then((webhooks) => {
+				for (const [, webhook] of webhooks) {
+					webhook.delete();
+				}
+			})
+			.catch(error => {
+				console.error(error);
+			});
+
 		const avatarUrl = (await client.users.fetch(jubileuId)).displayAvatarURL();
 
-		return message.channel.createWebhook('Jubileu', {
-			avatar: avatarUrl,
-		})
+		return message.channel.createWebhook('Jubileu', { avatar: avatarUrl })
 			.then(webhook => {
 				return webhook.send(
 					`Para ver mais informações sobre o comando, envie "${prefix}help [nome do comando]"`,
 					{ embeds: embeds },
 				);
+			})
+			.catch(error => {
+				console.error(error);
 			});
+
 	}
 
 	const name = args[0].toLowerCase();

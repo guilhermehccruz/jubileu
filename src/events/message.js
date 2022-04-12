@@ -68,7 +68,7 @@ export async function execute(message, client, servers) {
 				split: true,
 			});
 
-		console.log(`Comando: ${message.content}\nErro: ${error.message}`);
+		console.error(`Comando: ${message.content}\nErro: ${error.message}`);
 
 		return message.channel.send('Ih... deu alguma merda no comando');
 	}
