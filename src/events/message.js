@@ -56,12 +56,6 @@ export async function execute(message, client, servers) {
 	try {
 		await command.execute(servers, message, args, client);
 	} catch (error) {
-		if (error.statusCode == 410) {
-			return message.channel.send(
-				'Esse vídeo é marcado como sensível ou inapropriado para menores pelo youtube.' +
-				'Assim, não conseguimos reproduzi-lo');
-		}
-
 		client.channels.cache
 			.get(errorChannelId)
 			.send(`Comando: ${message.content}\nErro: ${error.message}`, {

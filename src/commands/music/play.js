@@ -33,9 +33,18 @@ export async function execute(servers, message, args) {
 	}
 
 	for await (const url of urls) {
-		const video = (await getInfo(url)).videoDetails;
+		try {
+			const video = (await getInfo(url)).videoDetails;
 
-		await addToQueue(servers, video.video_url, video.title, message);
+			await addToQueue(servers, video.video_url, video.title, message);
+		} catch (error) {
+			if (error.statusCode == 410) {
+				message.channel.send(
+					'Não foi possível adicionar um vídeo a fila, ' +
+					'pois ele é marcado como sensível ou inapropriado para menores pelo youtube.',
+				);
+			}
+		}
 	}
 }
 

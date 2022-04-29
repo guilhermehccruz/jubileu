@@ -7,7 +7,7 @@ export const name = 'help';
 export const description = 'Lista os comandos e os descreve';
 export const usage = '';
 export const aliases = ['h'];
-export const guildOnly = false;
+export const guildOnly = true;
 
 export async function execute(servers, message, args, client) {
 	const { commands } = message.client;
@@ -28,12 +28,13 @@ export async function execute(servers, message, args, client) {
 				folderCommands.push(require(`../${folder}/${file}`));
 			}
 
-			categories[folder] = folderCommands.map((command) => {
-				return {
+			categories[folder] = [];
+			for (const command of folderCommands) {
+				categories[folder].push({
 					name: command.name,
 					aliases: command.aliases,
-				};
-			});
+				});
+			}
 		}
 
 		const embeds = [];
